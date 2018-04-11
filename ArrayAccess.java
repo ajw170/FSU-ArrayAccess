@@ -123,9 +123,9 @@ public class ArrayAccess extends JFrame
                    List<Integer> intList = new ArrayList<>();
 
                    //add all array elements to ArrayList, primitive array types can't be boxed with asList
-                   for (int i : array)
+                   for (int i = 0; i < index; ++i)
                    {
-                       intList.add(i);
+                       intList.add(array[i]);
                    }
 
                    //now search the intList for the value entered
@@ -143,8 +143,8 @@ public class ArrayAccess extends JFrame
                    //add the index values that match to the indexList
                    while(iterator.hasNext())
                    {
+                       //hold value of index that is about to be searched
                        int nextIndex = iterator.nextIndex();
-                       int index = iterator.next();
                        if (iterator.next().equals(searchValue))
                        {
                            indexList.add(nextIndex);
@@ -152,13 +152,12 @@ public class ArrayAccess extends JFrame
                    }
 
                    //Now, display the values in the user box
-                   System.out.print(indexList);
                    outputField.setText(indexList.toString());
-
-
-
-
                }
+                /* Write catch handlers that catch the two types of exceptions that
+                  the try block might throw (NumberFormatException and
+                  NumberNotFoundException), and display appropriate messages
+                  in error message dialogs. */
                catch (NumberFormatException exception)
                {
                    //Display message instructing user to enter only integers
@@ -171,15 +170,6 @@ public class ArrayAccess extends JFrame
                    JOptionPane.showMessageDialog(null,exception.getMessage(),
                            "Not Found",JOptionPane.ERROR_MESSAGE);
                }
-
-
-
-               
-               /* Write catch handlers that catch the two types of exceptions that
-                  the try block might throw (NumberFormatException and 
-                  NumberNotFoundException), and display appropriate messages 
-                  in error message dialogs. */
-                
                retrieveField1.setText( "" );
             } // end method actionPerformed
          } // end anonymous inner class
@@ -201,11 +191,31 @@ public class ArrayAccess extends JFrame
                   bounds or represents an element in which the application has not
                   stored a value, an ArrayIndexOutOfBoundsException should 
                   be thrown. */
-               
+               try {
+                   String valueRead = event.getActionCommand();
+                   int indexSearchValue = Integer.parseInt(valueRead);
+
+                   int valueDisplayed = array[indexSearchValue];
+                   outputField.setText(Integer.toString(valueDisplayed));
+               }
+
                /* Write catch handlers that catch the two types of exceptions
                   the try block might throw (NumberFormatException and 
                   ArrayIndexOutOfBoundsException), and display appropriate 
                   messages in error message dialogs. */
+
+               catch (NumberFormatException exception)
+               {
+                   JOptionPane.showMessageDialog(null,"Please enter only integer values",
+                           "Invalid Input",JOptionPane.ERROR_MESSAGE);
+
+               }
+               catch (IndexOutOfBoundsException exception)
+               {
+                   JOptionPane.showMessageDialog(null,"Index Not Found",
+                           "Index out of Bounds",JOptionPane.ERROR_MESSAGE);
+
+               }
                
                retrieveField2.setText( "" );
             } // end anonymous inner class
