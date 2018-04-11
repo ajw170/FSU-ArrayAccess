@@ -12,6 +12,9 @@ The result will display or an exception will be displayed, defined in NumberNotF
 */
 
 // ArrayAccess.java
+import apple.laf.JRSUIUtils;
+import jdk.nashorn.internal.runtime.arrays.ArrayIndex;
+
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -21,6 +24,11 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.TreeMap;
+import java.util.List;
+import java.util.ListIterator;
 
 public class ArrayAccess extends JFrame 
 {
@@ -56,12 +64,34 @@ public class ArrayAccess extends JFrame
                /* Create a try block in which the application reads the number
                   entered in the inputField and assigns it to the next index 
                   in the array, then increments instance variable index. */
-                  
+
+               try {
+                   //Read the input value as a string
+                   String valueRead = e.getActionCommand();
+
+                   //The value may be incorrect - may throw NumberFormatException
+                   int integerVal = Integer.parseInt(valueRead);
+
+                   //add the integer to the array
+                   array[index] = integerVal;
+                   ++index; //increment index
+               }
                /* Write catch handlers that catch the two types of exceptions
                   that the previous try block might throw (NumberFormatException
-                  and ArrayIndexOutOfBoundsException), and display appropriate 
+                  and ArrayIndexOutOfBoundsException), and display appropriate
                   messages in error message dialogs. */
-               
+               catch (NumberFormatException exception)
+               {
+                   //Display message instructing user to enter only integers
+                   JOptionPane.showMessageDialog(null,"Please enter only integer values",
+                           "Invalid Input",JOptionPane.ERROR_MESSAGE);
+               }
+               catch (ArrayIndexOutOfBoundsException exception)
+               {
+                   //Display message indicating the array capacity has been reached
+                   JOptionPane.showMessageDialog(null,"Array may contain only 10 elements",
+                           "Array Full",JOptionPane.ERROR_MESSAGE);
+               }
                inputField.setText( "" );
             } // end method actionPerformed
          } // end anonymous inner class
@@ -83,6 +113,67 @@ public class ArrayAccess extends JFrame
                   If the number is found, the outputField should display all the 
                   indices in which the number was found. If the number is not 
                   found, a NumberNotFoundException should be thrown. */
+               try {
+                   String valueRead = event.getActionCommand();
+                   int searchValue = Integer.parseInt(valueRead);
+
+                   //NOTE - I did the below the way I did so I could practice Generic data structures.
+                   //It could have been done using only primitive types using much less code.
+
+                   List<Integer> intList = new ArrayList<>();
+
+                   //add all array elements to ArrayList, primitive array types can't be boxed with asList
+                   for (int i : array)
+                   {
+                       intList.add(i);
+                   }
+
+                   //now search the intList for the value entered
+                   boolean valueFound = intList.contains(searchValue);
+                   if (!valueFound)
+                       throw new NumberNotFoundException();
+
+                   //the value was found, add to a list
+                   //create a list that will hold all of the index values
+                   ArrayList<Integer> indexList = new ArrayList<>();
+                   //create an iterator to iterate through list
+
+                   ListIterator<Integer> iterator = intList.listIterator();
+
+                   //add the index values that match to the indexList
+                   while(iterator.hasNext())
+                   {
+                       int nextIndex = iterator.nextIndex();
+                       int index = iterator.next();
+                       if (iterator.next().equals(searchValue))
+                       {
+                           indexList.add(nextIndex);
+                       }
+                   }
+
+                   //Now, display the values in the user box
+                   System.out.print(indexList);
+                   outputField.setText(indexList.toString());
+
+
+
+
+               }
+               catch (NumberFormatException exception)
+               {
+                   //Display message instructing user to enter only integers
+                   JOptionPane.showMessageDialog(null,"Please enter only integer values",
+                           "Invalid Input",JOptionPane.ERROR_MESSAGE);
+               }
+               catch (NumberNotFoundException exception)
+               {
+                   //Display message indicating the number was not found
+                   JOptionPane.showMessageDialog(null,exception.getMessage(),
+                           "Not Found",JOptionPane.ERROR_MESSAGE);
+               }
+
+
+
                
                /* Write catch handlers that catch the two types of exceptions that
                   the try block might throw (NumberFormatException and 
