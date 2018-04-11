@@ -12,9 +12,6 @@ The result will display or an exception will be displayed, defined in NumberNotF
 */
 
 // ArrayAccess.java
-import apple.laf.JRSUIUtils;
-import jdk.nashorn.internal.runtime.arrays.ArrayIndex;
-
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
